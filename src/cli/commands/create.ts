@@ -1,7 +1,15 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { getGitDiff, isGitRepository, getCurrentBranch } from '../../git/diff.js';
-import { createBranch, branchExists, sanitizeBranchName } from '../../git/branch.js';
+import {
+  getGitDiff,
+  isGitRepository,
+  getCurrentBranch,
+} from '../../git/diff.js';
+import {
+  createBranch,
+  branchExists,
+  sanitizeBranchName,
+} from '../../git/branch.js';
 import { generateBranchName } from '../../ai/generator.js';
 import { getConfig } from '../../config/manager.js';
 import { spinner } from '../../utils/spinner.js';
@@ -13,7 +21,7 @@ interface CreateOptions {
 
 export async function createBranchCommand(options: CreateOptions) {
   try {
-    if (!await isGitRepository()) {
+    if (!(await isGitRepository())) {
       console.error(chalk.red('Error: Not a git repository'));
       process.exit(1);
     }
@@ -25,24 +33,29 @@ export async function createBranchCommand(options: CreateOptions) {
     spin.start();
 
     const diff = await getGitDiff();
-    
+
     if (!diff.staged && !diff.unstaged && diff.untracked.length === 0) {
       spin.stop();
-      console.error(chalk.yellow('No changes detected. Make some changes first!'));
+      console.error(
+        chalk.yellow('No changes detected. Make some changes first!')
+      );
       process.exit(0);
     }
 
     spin.text = 'Generating branch name...';
-    
+
     const config = await getConfig();
     const model = options.model || config.model;
-    
+
     const suggestedName = await generateBranchName(diff, model);
     const sanitizedName = await sanitizeBranchName(suggestedName);
-    
+
     spin.stop();
-    
-    console.log(chalk.green('✓ Suggested branch name:'), chalk.cyan(sanitizedName));
+
+    console.log(
+      chalk.green('✓ Suggested branch name:'),
+      chalk.cyan(sanitizedName)
+    );
 
     let finalBranchName = sanitizedName;
 
@@ -61,14 +74,14 @@ export async function createBranchCommand(options: CreateOptions) {
               return `Branch '${input}' already exists`;
             }
             return true;
-          }
+          },
         },
         {
           type: 'confirm',
           name: 'confirm',
           message: 'Create this branch?',
-          default: true
-        }
+          default: true,
+        },
       ]);
 
       if (!answers.confirm) {
@@ -86,9 +99,11 @@ export async function createBranchCommand(options: CreateOptions) {
 
     await createBranch(finalBranchName);
     console.log(chalk.green('✓ Branch created:'), chalk.cyan(finalBranchName));
-
   } catch (error) {
-    console.error(chalk.red('Error:'), error instanceof Error ? error.message : String(error));
+    console.error(
+      chalk.red('Error:'),
+      error instanceof Error ? error.message : String(error)
+    );
     process.exit(1);
   }
 }

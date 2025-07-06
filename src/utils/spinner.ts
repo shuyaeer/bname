@@ -31,6 +31,6 @@ export function spinner(text: string): Spinner {
     },
     set text(newText: string) {
       currentText = newText;
-    }
+    },
   };
 }

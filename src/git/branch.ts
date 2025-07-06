@@ -7,7 +7,9 @@ export async function createBranch(branchName: string): Promise<void> {
   try {
     await execAsync(`git checkout -b ${branchName}`);
   } catch (error) {
-    throw new Error(`Failed to create branch: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to create branch: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }
 

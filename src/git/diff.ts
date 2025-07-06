@@ -14,16 +14,18 @@ export async function getGitDiff(): Promise<GitDiff> {
     const [stagedDiff, unstagedDiff, untrackedFiles] = await Promise.all([
       getStagedDiff(),
       getUnstagedDiff(),
-      getUntrackedFiles()
+      getUntrackedFiles(),
     ]);
 
     return {
       staged: stagedDiff,
       unstaged: unstagedDiff,
-      untracked: untrackedFiles
+      untracked: untrackedFiles,
     };
   } catch (error) {
-    throw new Error(`Failed to get git diff: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to get git diff: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }
 
@@ -47,8 +49,13 @@ async function getUnstagedDiff(): Promise<string> {
 
 async function getUntrackedFiles(): Promise<string[]> {
   try {
-    const { stdout } = await execAsync('git ls-files --others --exclude-standard');
-    return stdout.trim().split('\n').filter(file => file.length > 0);
+    const { stdout } = await execAsync(
+      'git ls-files --others --exclude-standard'
+    );
+    return stdout
+      .trim()
+      .split('\n')
+      .filter((file) => file.length > 0);
   } catch (error) {
     return [];
   }

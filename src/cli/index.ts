@@ -10,7 +10,9 @@ import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const packageJson = JSON.parse(readFileSync(join(__dirname, '../../package.json'), 'utf-8'));
+const packageJson = JSON.parse(
+  readFileSync(join(__dirname, '../../package.json'), 'utf-8')
+);
 const { version } = packageJson;
 
 const program = new Command();
@@ -23,7 +25,9 @@ program
 program
   .command('create')
   .alias('c')
-  .description('Create a new branch with an AI-generated name based on git diff')
+  .description(
+    'Create a new branch with an AI-generated name based on git diff'
+  )
   .option('-y, --yes', 'Skip confirmation prompt')
   .option('-m, --model <model>', 'AI model to use')
   .action(createBranchCommand);
