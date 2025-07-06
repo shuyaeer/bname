@@ -78,9 +78,10 @@ bname can be configured through multiple sources (in order of precedence):
 ### Supported Models
 
 #### OpenAI
-- `gpt-3.5-turbo` (default)
+- `gpt-4o-mini` (default)
+- `gpt-4o`
 - `gpt-4`
-- `gpt-4-turbo-preview`
+- `gpt-3.5-turbo`
 
 #### Anthropic
 - `claude-3-haiku-20240307`

@@ -14,16 +14,18 @@ export async function getGitDiff(): Promise<GitDiff> {
     const [stagedDiff, unstagedDiff, untrackedFiles] = await Promise.all([
       getStagedDiff(),
       getUnstagedDiff(),
-      getUntrackedFiles()
+      getUntrackedFiles(),
     ]);
 
     return {
       staged: stagedDiff,
       unstaged: unstagedDiff,
-      untracked: untrackedFiles
+      untracked: untrackedFiles,
     };
   } catch (error) {
-    throw new Error(`Failed to get git diff: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to get git diff: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }
 
@@ -31,7 +33,7 @@ async function getStagedDiff(): Promise<string> {
   try {
     const { stdout } = await execAsync('git diff --cached');
     return stdout;
-  } catch (error) {
+  } catch {
     return '';
   }
 }
@@ -40,16 +42,21 @@ async function getUnstagedDiff(): Promise<string> {
   try {
     const { stdout } = await execAsync('git diff');
     return stdout;
-  } catch (error) {
+  } catch {
     return '';
   }
 }
 
 async function getUntrackedFiles(): Promise<string[]> {
   try {
-    const { stdout } = await execAsync('git ls-files --others --exclude-standard');
-    return stdout.trim().split('\n').filter(file => file.length > 0);
-  } catch (error) {
+    const { stdout } = await execAsync(
+      'git ls-files --others --exclude-standard'
+    );
+    return stdout
+      .trim()
+      .split('\n')
+      .filter((file) => file.length > 0);
+  } catch {
     return [];
   }
 }
@@ -67,7 +74,7 @@ export async function getCurrentBranch(): Promise<string> {
   try {
     const { stdout } = await execAsync('git branch --show-current');
     return stdout.trim();
-  } catch (error) {
+  } catch {
     throw new Error('Failed to get current branch');
   }
 }
