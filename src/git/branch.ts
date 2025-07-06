@@ -22,11 +22,11 @@ export async function branchExists(branchName: string): Promise<boolean> {
   }
 }
 
-export async function sanitizeBranchName(name: string): Promise<string> {
+export function sanitizeBranchName(name: string): string {
   return name
     .toLowerCase()
     .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9\-_\/]/g, '')
+    .replace(/[^a-z0-9\-_/]/g, '')
     .replace(/\/+/g, '/')
     .replace(/^\/|\/$/g, '')
     .replace(/-+/g, '-')

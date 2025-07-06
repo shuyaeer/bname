@@ -48,7 +48,7 @@ export async function createBranchCommand(options: CreateOptions) {
     const model = options.model || config.model;
 
     const suggestedName = await generateBranchName(diff, model);
-    const sanitizedName = await sanitizeBranchName(suggestedName);
+    const sanitizedName = sanitizeBranchName(suggestedName);
 
     spin.stop();
 
@@ -89,7 +89,7 @@ export async function createBranchCommand(options: CreateOptions) {
         process.exit(0);
       }
 
-      finalBranchName = await sanitizeBranchName(answers.branchName);
+      finalBranchName = sanitizeBranchName(answers.branchName as string);
     }
 
     if (await branchExists(finalBranchName)) {

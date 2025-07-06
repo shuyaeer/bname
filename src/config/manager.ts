@@ -52,12 +52,13 @@ export async function getAllConfig(): Promise<Config> {
 export async function setConfig(key: string, value: string): Promise<void> {
   const config = await loadJsonConfig(CONFIG_FILE);
 
-  let parsedValue: any = value;
+  let parsedValue: string | boolean | number = value;
   if (value === 'true') parsedValue = true;
   else if (value === 'false') parsedValue = false;
   else if (!isNaN(Number(value))) parsedValue = Number(value);
 
-  config[key as keyof Config] = parsedValue;
+  (config as Record<string, string | boolean | number | undefined>)[key] =
+    parsedValue;
 
   await writeFile(CONFIG_FILE, JSON.stringify(config, null, 2));
   cachedConfig = null;
@@ -66,7 +67,7 @@ export async function setConfig(key: string, value: string): Promise<void> {
 async function loadJsonConfig(filePath: string): Promise<Partial<Config>> {
   try {
     const content = await readFile(filePath, 'utf-8');
-    return JSON.parse(content);
+    return JSON.parse(content) as Partial<Config>;
   } catch {
     return {};
   }

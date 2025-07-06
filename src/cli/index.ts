@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import chalk from 'chalk';
 import { createBranchCommand } from './commands/create.js';
 import { configCommand } from './commands/config.js';
 import { readFileSync } from 'fs';
@@ -10,9 +9,14 @@ import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+interface PackageJson {
+  version: string;
+  [key: string]: unknown;
+}
+
 const packageJson = JSON.parse(
   readFileSync(join(__dirname, '../../package.json'), 'utf-8')
-);
+) as PackageJson;
 const { version } = packageJson;
 
 const program = new Command();
@@ -43,5 +47,5 @@ program
 program.parse();
 
 if (!process.argv.slice(2).length) {
-  createBranchCommand({ yes: false });
+  void createBranchCommand({ yes: false });
 }

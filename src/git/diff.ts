@@ -33,7 +33,7 @@ async function getStagedDiff(): Promise<string> {
   try {
     const { stdout } = await execAsync('git diff --cached');
     return stdout;
-  } catch (error) {
+  } catch {
     return '';
   }
 }
@@ -42,7 +42,7 @@ async function getUnstagedDiff(): Promise<string> {
   try {
     const { stdout } = await execAsync('git diff');
     return stdout;
-  } catch (error) {
+  } catch {
     return '';
   }
 }
@@ -56,7 +56,7 @@ async function getUntrackedFiles(): Promise<string[]> {
       .trim()
       .split('\n')
       .filter((file) => file.length > 0);
-  } catch (error) {
+  } catch {
     return [];
   }
 }
@@ -74,7 +74,7 @@ export async function getCurrentBranch(): Promise<string> {
   try {
     const { stdout } = await execAsync('git branch --show-current');
     return stdout.trim();
-  } catch (error) {
+  } catch {
     throw new Error('Failed to get current branch');
   }
 }
